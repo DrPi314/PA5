@@ -71,10 +71,9 @@ public class ShoppingCartGUI extends JFrame implements ActionListener {
 		if(callingBtn.equalsIgnoreCase("Sort")) {
 			sortProducts(sortList.getSelectedItem().toString()); 
 			showSort(products);
-			//saveSort(products);
+			saveSort(products);
 		} else if(callingBtn.equalsIgnoreCase("Browse")) {
 			add(fileChooser);
-			fileChooser.showOpenDialog(null);
 			int result = fileChooser.showOpenDialog(null);
 			if(result == JFileChooser.APPROVE_OPTION)
 			browseText.setText(fileChooser.getSelectedFile().getName());
@@ -106,7 +105,16 @@ public class ShoppingCartGUI extends JFrame implements ActionListener {
 	}
 	
 	private void saveSort(ArrayList<Product> p) {
-		
+		try {
+			FileWriter out = new FileWriter(path + "Sorted_Products.csv");
+			for(Product product : p) {
+				out.append("\n" + product.toString());
+			}
+			out.close();
+			sFile.append("\nFile write successful!");
+		} catch (IOException e) {
+			sFile.append("\nCould not write file");
+		}
 	}
 	
 	private void setProducts(int numProducts, String line) {
@@ -118,8 +126,6 @@ public class ShoppingCartGUI extends JFrame implements ActionListener {
 		products.add(new Product(na, id, de, pr));
 	}
 
-	//could not get Collections to work for the life of me.
-	//was recommended to try Arrays
 	private void sortProducts(String c) {
 		switch(c) {
 		case "ID":
